@@ -6,9 +6,41 @@ $(document).ready(function(){
 
 function addClickHandlers() {
   $('#submitBtn').on('click', handleSubmit);
+  $('#bookShelf').on('click', '.delete', deleteBook);
+  $('#bookShelf').on('click', '.update', updatingBookStatus);
 
   // TODO - Add code for edit & delete buttons
 }
+
+function deleteBook(event){
+  const bookId = $(event.target).data('bookid');
+  console.log('Deleting book with id of', bookId);
+
+  $.ajax({
+    method: 'DELETE',
+    url: `/books/${bookId}`
+  }).then(() => {
+    refreshBooks();
+  }).catch(error => {
+    console.log('ERROR deleting book', error);
+  })
+}
+
+function updatingBookStatus(event){
+  const bookId = $(event.target).data('bookid');
+  console.log( `Marking book with id of ${bookId} as read`);
+
+  $.ajax({
+    method: 'PUT',
+    url: `/books/${bookId}/isRead`
+  }).then(() => {
+    refreshBooks();
+  }).catch(error =>{
+    console.log('Error Marking book', error);
+  })
+}
+
+
 
 function handleSubmit() {
   console.log('Submit button clicked.');
@@ -58,6 +90,12 @@ function renderBooks(books) {
       <tr>
         <td>${book.title}</td>
         <td>${book.author}</td>
+        <td>
+          <button class="update" data-bookid=${book.id}>Mark As Read</button>
+        </td>
+        <td>
+          <button class="delete" data-bookid=${book.id}>Delete</button>
+        </td>
       </tr>
     `);
   }
