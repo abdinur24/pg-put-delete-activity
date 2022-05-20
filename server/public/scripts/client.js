@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
   console.log('jQuery sourced.');
   refreshBooks();
@@ -26,14 +27,29 @@ function deleteBook(event){
   })
 }
 
+// function updatingMarked(){
+//   $.ajax({
+//     method: 'GET',
+//     url: '/books/isRead'
+//   }).then(() => {
+//     console.log(response)
+//     $(response).addClass('marked')
+//     // refreshBooks();
+//   }).catch(error =>{
+//     console.log('Error Marking book', error);
+//   })
+
+// }
+
 function updatingBookStatus(event){
   const bookId = $(event.target).data('bookid');
   console.log( `Marking book with id of ${bookId} as read`);
-
+  
   $.ajax({
     method: 'PUT',
     url: `/books/${bookId}/isRead`
   }).then(() => {
+    // updatingMarked();
     refreshBooks();
   }).catch(error =>{
     console.log('Error Marking book', error);
@@ -87,7 +103,7 @@ function renderBooks(books) {
     let book = books[i];
     // For each book, append a new row to our table
     $('#bookShelf').append(`
-      <tr>
+      <tr class="mark" data-bookisread=${book.isRead}>
         <td>${book.title}</td>
         <td>${book.author}</td>
         <td>
@@ -100,3 +116,4 @@ function renderBooks(books) {
     `);
   }
 }
+

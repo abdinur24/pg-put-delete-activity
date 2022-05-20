@@ -10,15 +10,15 @@ router.get('/', (req, res) => {
     // Sends back the results in an object
     res.send(result.rows);
   })
-  .catch(error => {
-    console.log('error getting books', error);
-    res.sendStatus(500);
-  });
+    .catch(error => {
+      console.log('error getting books', error);
+      res.sendStatus(500);
+    });
 });
 
 // Adds a new book to the list of awesome reads
 // Request body must be a book object with a title and author.
-router.post('/',  (req, res) => {
+router.post('/', (req, res) => {
   let newBook = req.body;
   console.log(`Adding book`, newBook);
 
@@ -59,14 +59,26 @@ router.delete('/:id', (req, res) => {
   const bookId = req.params.id;
   const query = 'DELETE FROM "books" WHERE "id"=$1'
   pool.query(query, [bookId])
-      .then(() => {
-          res.sendStatus(204);
-      }).catch(error => {
-          console.log('Error doing a DELETE book', error);
-          res.sendStatus(500);
-      });
+    .then(() => {
+      res.sendStatus(204);
+    }).catch(error => {
+      console.log('Error doing a DELETE book', error);
+      res.sendStatus(500);
+    });
 })
 
+router.get('/isRead', (req, res) => {
+  // console.log(`Marked book with boolean of`, req.params);
+  // const bookIsRead = req.params.isRead
+  const query = 'SELECT * FROM "books" WHERE "isRead" = TRUE;'
+  pool.query(query).then(result => {
+    // Sends back the results in an object
+    res.send(result.rows);
+  }).catch(error => {
+    console.log('ERROR GETTING read books', error);
+    res.sendStatus(500);
+  })
+})
 
 
 module.exports = router;
